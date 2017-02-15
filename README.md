@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](README.ja.md)
+[English](README_en.md) | [日本語](README.md)
 
 # niku.py
 * ローストビーフの1次元熱伝導を解いてアニメーション表示するお遊びプログラムです。

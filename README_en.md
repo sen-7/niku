@@ -12,7 +12,7 @@
 
 ## sample
 ![sample](sample.gif)
-<img src="sample.gif" size="50%">
+<img src="sample.gif" width="50%" height="50%">
 
 ## To make a good roast beef
 * No cooking methods will achieve boundary conditions (temperature of meat surface) higher than 100 degrees C.

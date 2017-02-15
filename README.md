@@ -1,6 +1,6 @@
 [English](README.md) | [日本語](README.ja.md)
 
-# niku
+# niku (means meat, in Japanese)
 * One-dimensional roast beef simulation ;-)
 
 ## Requirements
@@ -21,6 +21,6 @@
 * Initial condition is not an important factor. You don't need to care.
 * The cooking time is proportional to the square of the thickness. Say, cook two-cm-meat for 10 minutes.
 
-# Future work
+## Future work
 * non-flat meat (consider shape factor)
 * model heat conduction and convection outside the meat (air in the oven cabinet)

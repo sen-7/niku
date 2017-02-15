@@ -11,7 +11,6 @@
 * imagemagick
 
 ## sample
-![sample](sample.gif)
 <img src="sample.gif" width="50%" height="50%">
 
 ## To make a good roast beef

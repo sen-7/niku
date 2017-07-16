@@ -7,12 +7,16 @@ from matplotlib.colors import LinearSegmentedColormap
 
 def main():
   ch = 1.1e-7 # m2s-1
+
   t0 = float(input("Initial temperature [10 C] : ") or "10")
   t1 = float(input("Boundary temperature [75 C] : ") or "75")
   xmax = float(input("Thickness [4 cm] : ") or "4") * 0.005
+  curvature = float(input("Curvature (0 for slab, 1.0 for cylinder, 2.0 for sphere) [0] : ") or "0")
+  accel = float(input("acceleration (type 1 for accuracy) [3] : ") or "3")
+
   nsec = 100.0 * 2.5 * (xmax / 0.005)**2
-  dt = 0.01 * (xmax / 0.005)**2
-  dx = xmax / 25
+  dt = 0.01 * (xmax / 0.005)**2 * (accel)**2
+  dx = xmax / 25 * accel
   nx = int(xmax / dx)
   nstep = int(nsec / dt)
 
@@ -23,17 +27,23 @@ def main():
   os.system("mkdir -p img")
   os.system("rm -f img/*")
 
+  r = np.linspace(xmax, 0, nx, endpoint=False) + dx / 2
+
+  plot_intvl = 200
   for i in range(nstep):
-    if (i % 200 == 0):
+    if (i % plot_intvl == 0):
       plot_snap(tmp, i, nx, xmax, dt, t0, t1)
 
     # boundary condition tmp[0] = t1, tmp[nx] = tmp[nx-1]
+    # see a34p5-8 for different shape
     dtmp[0] = 0.0
-    dtmp[1:nx-1] = ch * dt * (tmp[2:nx] - 2.0 * tmp[1:nx-1] + tmp[0:nx-2]) / (dx * dx)
-    dtmp[nx-1] = ch * dt * (tmp[nx-1] - 2.0 * tmp[nx-1] + tmp[nx-2]) / (dx * dx)
+    dtmp[1:nx-1] = ch * dt * ((tmp[2:nx] - 2.0 * tmp[1:nx-1] + tmp[0:nx-2]) / (dx * dx) \
+      + curvature / r[1:nx-1] * (tmp[0:nx-2] - tmp[2:nx]) / (2 * dx))
+    dtmp[nx-1] = ch * dt * ((tmp[nx-1] - 2.0 * tmp[nx-1] + tmp[nx-2]) / (dx * dx) \
+      + curvature / r[nx-1] * (tmp[nx-2] - tmp[nx-1]) / dx)
     tmp[:] = tmp[:] + dtmp[:]
 
-  os.system("convert -delay 15 -loop 0 ./img/*.png ./img/all.gif")
+  os.system("convert -delay %d -loop 0 ./img/*.png ./img/all.gif" % (15 * accel))
   os.system("rm -f img/*.png")
 
 def plot_snap(tmp, i, nx, xmax, dt, t0, t1):
